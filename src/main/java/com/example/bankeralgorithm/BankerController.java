@@ -113,49 +113,91 @@ public class BankerController implements Initializable {
             int[][] allocated = new int[size][3];
             int[][] maximum = new int[size][3];
             int[][] need = new int[size][3];
+            String[] processNames = new String[size];
+            Process[] processes = new Process[size];
 
             for (int i = 0; i < size; i++) {
                 Process p = processList.get(i);
+                processes[i] = p;
+                processNames[i] = p.getProcessName();
                 allocated[i] = new int[]{p.getResource1(), p.getResource2(), p.getResource3()};
                 maximum[i] = new int[]{p.getResource1Max(), p.getResource2Max(), p.getResource3Max()};
                 need[i] = new int[]{p.getNeed1(), p.getNeed2(), p.getNeed3()};
             }
 
             List<String> safeSequence = new ArrayList<>();
+            List<int[]> availableSequence = new ArrayList<>();
             boolean[] finish = new boolean[size];
             boolean progressMade;
+
+            int[] work = Arrays.copyOf(available, 3);
+            availableSequence.add(Arrays.copyOf(work, 3)); // Initial available
 
             do {
                 progressMade = false;
                 for (int i = 0; i < size; i++) {
-                    if (!finish[i] && canProceed(i, available, need)) {
-                        safeSequence.add(processList.get(i).getProcessName());
+                    if (!finish[i] && canProceed(i, work, need)) {
+                        // Process executes
                         for (int j = 0; j < 3; j++) {
-                            available[j] += allocated[i][j];
+                            work[j] += allocated[i][j];
                         }
                         finish[i] = true;
+                        safeSequence.add(processNames[i]);
+                        availableSequence.add(Arrays.copyOf(work, 3));
                         progressMade = true;
                     }
                 }
             } while (progressMade);
 
             if (safeSequence.size() == size) {
-                for (int i = 0; i < size; i++) {
-                    Process p = processList.get(i);
-                    p.setAllocA(allocated[i][0]);
-                    p.setAllocB(allocated[i][1]);
-                    p.setAllocC(allocated[i][2]);
-                    p.setMaxA(maximum[i][0]);
-                    p.setMaxB(maximum[i][1]);
-                    p.setMaxC(maximum[i][2]);
-                    p.setNeedA(need[i][0]);
-                    p.setNeedB(need[i][1]);
-                    p.setNeedC(need[i][2]);
-                    p.setAvailA(available[0]);
-                    p.setAvailB(available[1]);
-                    p.setAvailC(available[2]);
-                    p.setSafeSequence(i == size - 1 ? String.join(" ", safeSequence) : "");
+                // Reset all available values and safe sequence
+                for (Process p : processList) {
+                    p.setAvailA(0);
+                    p.setAvailB(0);
+                    p.setAvailC(0);
+                    p.setSafeSequence("");
                 }
+
+                // Update available values in safe sequence order
+                for (int i = 0; i < safeSequence.size(); i++) {
+                    String processName = safeSequence.get(i);
+                    int[] av = availableSequence.get(i + 1); // i+1 because first element is initial available
+
+                    // Find the process and set its available values
+                    for (Process p : processList) {
+                        if (p.getProcessName().equals(processName)) {
+                            p.setAvailA(av[0]);
+                            p.setAvailB(av[1]);
+                            p.setAvailC(av[2]);
+                            break;
+                        }
+                    }
+                }
+
+                // Set safe sequence in the last process (for visual)
+                String seq = String.join(" ", safeSequence);
+                if (!processList.isEmpty()) {
+                    processList.get(size - 1).setSafeSequence(seq);
+                }
+
+                // Reorder the table according to the safe sequence
+                ObservableList<Process> orderedList = FXCollections.observableArrayList();
+                for (String name : safeSequence) {
+                    for (Process p : processList) {
+                        if (p.getProcessName().equals(name)) {
+                            orderedList.add(p);
+                            break;
+                        }
+                    }
+                }
+                // Add any remaining processes that might not be in safe sequence (shouldn't happen)
+                for (Process p : processList) {
+                    if (!orderedList.contains(p)) {
+                        orderedList.add(p);
+                    }
+                }
+
+                bankerTableView.setItems(orderedList);
                 bankerTableView.refresh();
             } else {
                 showAlert(Alert.AlertType.ERROR, "Unsafe State",
@@ -169,6 +211,9 @@ public class BankerController implements Initializable {
                     "Please enter valid integers for available resources.");
         }
     }
+
+
+
 
     private boolean canProceed(int processIndex, int[] available, int[][] need) {
         for (int i = 0; i < 3; i++) {
