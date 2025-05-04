@@ -1,0 +1,58 @@
+.background_color {
+    -fx-background-color: #151133;
+    -fx-font-family: 'Arial';
+}
+.header {
+    -fx-background-color: transparent;
+    -fx-text-fill: #FA3293;
+    -fx-font-size: 20px;
+    -fx-font-weight: 700;
+    -fx-padding: 10px;
+    -fx-alignment: center;
+}
+.labelItems {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: 400;
+    -fx-padding: 10px;
+    -fx-alignment: center;
+}
+.TexField {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
+    -fx-padding: 10px;
+    -fx-alignment: center-left;
+    -fx-border-color: #4CAF50;
+    -fx-border-width: 2px;
+    -fx-border-radius: 15px;
+}
+
+.TexField:focused {
+    -fx-border-color: #FF9800;
+}
+
+.TexField:hover {
+    -fx-border-color: #2196F3;
+}
+.button {
+    -fx-background-color: white;
+    -fx-text-fill: black;
+    -fx-font-family: 'Arial';
+    -fx-font-size: 16px;
+    -fx-font-weight: 650;
+    -fx-padding: 10px 20px;
+    -fx-background-radius: 60px;
+    -fx-alignment: center;
+}
+
+.button:hover {
+    -fx-opacity: 0.7;
+    -fx-cursor: hand;
+}
+
+.button:pressed {
+    -fx-opacity: 0.5;
+}
