@@ -72,7 +72,7 @@
                   <TextField fx:id="availableTextField3" prefHeight="39.0" prefWidth="78.0" styleClass="TexField" stylesheets="@../../../css/style.css" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                </children>
             </GridPane>
-            <Button fx:id="calculateButton" mnemonicParsing="false" stylesheets="@../../../css/style.css" text="Calculate" />
+            <Button fx:id="calculateButton" mnemonicParsing="false" onAction="#calculate" stylesheets="@../../../css/style.css" text="Calculate" />
          </children>
       </VBox>
       <AnchorPane layoutX="433.0" layoutY="15.0" prefHeight="583.0" prefWidth="1110.0" AnchorPane.topAnchor="6.0">

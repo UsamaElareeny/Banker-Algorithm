@@ -11,6 +11,11 @@ public class Process {
     private int resource1Max, resource2Max, resource3Max;
     private int need1, need2, need3;
 
+    // Newly added fields for Allocation and Available resources
+    private int allocA, allocB, allocC; // Allocated resources
+    private int availA, availB, availC; // Available resources
+    private String safeSequence; // To store safe sequence
+
     // Constructor
     public Process(String processName, int resource1, int resource2, int resource3,
                    int resource1Max, int resource2Max, int resource3Max,
@@ -25,6 +30,17 @@ public class Process {
         this.need1 = need1;
         this.need2 = need2;
         this.need3 = need3;
+
+        // Initialize allocation and available resources
+        this.allocA = 0;
+        this.allocB = 0;
+        this.allocC = 0;
+
+        this.availA = 0;
+        this.availB = 0;
+        this.availC = 0;
+
+        this.safeSequence = ""; // Default empty safe sequence
     }
 
     // Getter methods
@@ -66,5 +82,43 @@ public class Process {
 
     public int getNeed3() {
         return need3;
+    }
+
+    // Setters for Max resources
+    public void setMaxA(int maxA) { this.resource1Max = maxA; }
+    public void setMaxB(int maxB) { this.resource2Max = maxB; }
+    public void setMaxC(int maxC) { this.resource3Max = maxC; }
+
+    // Setters for Need resources
+    public void setNeedA(int needA) { this.need1 = needA; }
+    public void setNeedB(int needB) { this.need2 = needB; }
+    public void setNeedC(int needC) { this.need3 = needC; }
+
+    // Setters for Allocated resources
+    public void setAllocA(int allocA) { this.allocA = allocA; }
+    public void setAllocB(int allocB) { this.allocB = allocB; }
+    public void setAllocC(int allocC) { this.allocC = allocC; }
+
+    // Setters for Available resources
+    public void setAvailA(int availA) { this.availA = availA; }
+    public void setAvailB(int availB) { this.availB = availB; }
+    public void setAvailC(int availC) { this.availC = availC; }
+
+
+    // Getter methods for Allocated and Available resources
+    public int getAllocA() { return allocA; }
+    public int getAllocB() { return allocB; }
+    public int getAllocC() { return allocC; }
+
+    public int getAvailA() { return availA; }
+    public int getAvailB() { return availB; }
+    public int getAvailC() { return availC; }
+
+    public void setSafeSequence(String safeSequence) {
+        this.safeSequence = safeSequence;
+    }
+
+    public String getSafeSequence() {
+        return safeSequence;
     }
 }
